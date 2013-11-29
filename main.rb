@@ -3,24 +3,24 @@ require 'spreadsheet'
 
 Dir.chdir 'MLS Cash Buyers' # Navigate to the main directory holding all county folders
 
-mlsDir = Dir.pwd
+mlsDir = Dir.pwd    # Variable holding current directory
 properties = []
 
 Dir.entries(mlsDir).each do |dir|   # Loop through all valid county folders
     if dir.include? 'County'  # If the folder is a County folder
         puts "\nEntering the '#{dir}' folder ... \n\n"
         Dir.chdir "#{mlsDir}/#{dir}"  # Navigate to the County folder in iteration
-        county = County.new Dir.pwd
-        county.matchProperties
-        county.print
-        county.createXLS
-        properties.concat county.mainRows
+        county = County.new Dir.pwd # Create a new County object with the county directory
+        county.filterProperties  # Call to county instance method, collects all properties common in xls and pdf
+        county.print    # Call to county instance method, prints all properties collected above
+        county.createXLS    # Call to county instance method, creates an xls using the properties collected above
+        properties.concat county.mainRows   # adds above collected properties to global properties array
         Dir.chdir "../"
     end
 end
 
 
-
+# Writing all properties in the "properties" array to main/central xls file
 book = Spreadsheet::Workbook.new
 sheet = book.create_worksheet :name => "filtered"
 i = 0

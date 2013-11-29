@@ -8,31 +8,38 @@ class County
 	attr_accessor :excelProperties, :mainRows
 
 	def initialize dir
+
+		# Initializing instance variables
 		@pdfProperties = []
 		@excelProperties = []
 		@filteredProperties = []
 		@mainRows = []
+
 		Dir.entries(dir).each do |f|  # Loop through all files inside the County folder
-		    if f.include? 'pdf'
+		    if f.include? 'pdf'	# If a pdf file
 			    pdf = PDF_Parser.new f
 			    @pdfProperties.concat pdf.properties
-			elsif f.include? 'xlsx'
+			elsif f.include? 'xlsx'	# If an xlsx file
 			    excel = EXCEL_Parser.new f
 			    @excelHeaders = excel.headers
 			    @excelProperties.concat excel.properties
 	      	end
     	end
+    	# Create headers for main xls file
     	@headers = ["Tax Address", "Tax City", "Tax Zip"].concat @excelHeaders
-		@mainRows << @headers
+		@mainRows << @headers 
 	end
 
-	def matchProperties
+	# Matches properties in xlsx to properties in pdf 
+	# if match found, added to @filteredProperties else ignored
+	def filterProperties
+
+		# Loop through all properties in the xlsx file
 		@excelProperties.each do |property|
-			propertyAddr = property[3].strip
-			puts propertyAddr
-			@pdfProperties.each do |p|
-				puts "\t#{p[:propertyAddr]}"
-				if p[:propertyAddr].include? propertyAddr
+			propertyAddr = property[3].strip	# Get the address
+			@pdfProperties.each do |p|	# Loop through all the properties in the pdf file
+				if p[:propertyAddr].include? propertyAddr	# If xlsx address is a part of pdf address
+					# Add details in a specific format to @filteredProperties
 					taxArray = getTaxAddress p
 					@filteredProperties << {pdf: taxArray, excel: property}
 					break
@@ -41,6 +48,7 @@ class County
 		end
 	end
 
+	# Helper function to print properties
 	def print
 		puts "#{@filteredProperties.count} filtered properties"
 		@filteredProperties.each do |prop|
@@ -49,6 +57,7 @@ class County
 		end
 	end
 
+	# Extracts the tax Address from the pdf information
 	def getTaxAddress property
 		arr = []
 		addray = property[:propertyAddr].split
@@ -59,6 +68,7 @@ class County
 		arr
 	end
 
+	# Creates an XLS file from all the @filteredProperties
 	def createXLS
 		book = Spreadsheet::Workbook.new
 		sheet = book.create_worksheet :name => "filtered"

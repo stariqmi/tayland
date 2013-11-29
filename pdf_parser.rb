@@ -6,8 +6,8 @@ class PDF_Parser
 	attr_reader :properties
 
 	def initialize filename
-		system "../../pdftohtml -xml -q \"#{filename}\" pdf"
-		xml = Nokogiri::XML File.open("pdf.xml")
+		system "../../pdftohtml -xml -q \"#{filename}\" pdf"	# Uses exe application to convert to xml
+		xml = Nokogiri::XML File.open("pdf.xml")	# Nokogiri to open xml
 		@properties = getProperties xml
 		@properties
 	end
@@ -15,6 +15,8 @@ class PDF_Parser
 	def getProperties xml
 		props = []
 		pages = xml.xpath("//page")
+
+		# Parse each page using xpath
 		pages.each do |page|
 			property = {}
 			elems = page.xpath(".//text/b[contains(text(), 'Property Address')]/../following-sibling::*")

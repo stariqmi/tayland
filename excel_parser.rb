@@ -6,9 +6,9 @@ class EXCEL_Parser
     attr_accessor :properties, :headers
 
     def initialize filename
-        excelDoc = SimpleXlsxReader.open filename
-        sheet = findSheetByName "Tax Import", excelDoc
-        @properties = getProperties sheet
+        excelDoc = SimpleXlsxReader.open filename   # SimpleXlsReader is used to open xlsx doc
+        sheet = findSheetByName "Tax Import", excelDoc # Call to helper function to find the Tax Import sheet
+        @properties = getProperties sheet # Call to helper function to get all properties from the sheet
         @headers = @properties.slice! 0
     end
 
@@ -21,7 +21,6 @@ class EXCEL_Parser
     def getProperties sheet
         rows = []
         sheet.rows.each do |row|
-          
           rows << row if isNotEmpty row
         end
         rows 
@@ -34,5 +33,4 @@ class EXCEL_Parser
         end
         check
     end
-
 end
