@@ -1,4 +1,4 @@
-require_relative "county"
+require_relative 'county'
 require 'spreadsheet'
 
 Dir.chdir 'MLS Cash Buyers' # Navigate to the main directory holding all county folders

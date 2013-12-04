@@ -9,7 +9,9 @@ class EXCEL_Parser
         excelDoc = SimpleXlsxReader.open filename   # SimpleXlsReader is used to open xlsx doc
         sheet = findSheetByName "Tax Import", excelDoc # Call to helper function to find the Tax Import sheet
         @properties = getProperties sheet # Call to helper function to get all properties from the sheet
-        @headers = @properties.slice! 0
+        all_headers = @properties.slice! 0
+        all_headers.delete_at 2
+        @headers = all_headers
     end
 
     def findSheetByName name, excelDoc

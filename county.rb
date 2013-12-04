@@ -26,7 +26,7 @@ class County
 	      	end
     	end
     	# Create headers for main xls file
-    	@headers = ["Tax Address", "Tax City", "Tax Zip"].concat @excelHeaders
+    	@headers = ["Tax Address", "Tax City", "Tax State", "Tax Zip"].concat @excelHeaders
 		@mainRows << @headers 
 	end
 
@@ -41,6 +41,7 @@ class County
 				if p[:propertyAddr].include? propertyAddr	# If xlsx address is a part of pdf address
 					# Add details in a specific format to @filteredProperties
 					taxArray = getTaxAddress p
+					property.delete_at 2
 					@filteredProperties << {pdf: taxArray, excel: property}
 					break
 				end
@@ -60,8 +61,9 @@ class County
 	# Extracts the tax Address from the pdf information
 	def getTaxAddress property
 		arr = []
-		addray = property[:propertyAddr].split
-		arr << (addray[0..-3].join " ")
+		addray = property[:taxAddr].split
+		arr << (addray[0...-3].join " ")
+		arr << addray[-3]
 		arr << addray[-2]
 		arr << addray[-1]
 		arr << property[:owns]
