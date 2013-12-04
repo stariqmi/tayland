@@ -16,6 +16,7 @@ class EXCEL_Parser
         excelDoc.sheets.each do |sheet|
           return sheet if sheet.name == name
         end
+        excelDoc.sheets[0]
     end
 
     def getProperties sheet

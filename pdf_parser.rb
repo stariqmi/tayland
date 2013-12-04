@@ -25,10 +25,12 @@ class PDF_Parser
 			property[:owner] = elems[0].text
 			elems = page.xpath(".//text/b[contains(text(), 'Tax Mailing Address')]/../following-sibling::*")
 			property[:taxAddr] = elems[0].text
-			property[:owns] = if property[:taxAddr] == property[:propertyAddr]
-				1 
+			taxAddr = property[:taxAddr].split()[0..-3].join " "
+			propAddr = property[:propertyAddr].split()[0..-2].join " "
+			if taxAddr == propAddr
+				property[:owns] = 1 
 			else 
-				0
+				property[:owns] = 0
 			end
 			props << property
 		end
