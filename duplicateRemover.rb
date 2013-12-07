@@ -3,7 +3,9 @@ require 'spreadsheet'
 
 source_xls = Spreadsheet.open 'MLS Cash Buyers/main_properties.xls'
 source_sheet = source_xls.worksheet 0
-headers = source_sheet.row(0)
+all_headers = source_sheet.row(0)
+headers = all_headers[0...4] << all_headers[5]
+
 def checkUniqueness row, unique_rows
 	unique_rows.each do |ur|
 		return false if row[0] == ur[0]
@@ -32,4 +34,4 @@ unique_rows.each do |ur|
 	row_num += 1
 end
 
-unique_book.write 'MLS Cash Buyers/unique_properties.xls'
+unique_book.write 'MLS Cash Buyers/unique_records.xls'
