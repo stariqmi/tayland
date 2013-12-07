@@ -24,7 +24,7 @@ class EXCEL_Parser
     def getProperties sheet
         rows = []
         sheet.rows.each do |row|
-          rows << row if isNotEmpty row
+            rows << row if isNotEmpty row
         end
         rows 
     end

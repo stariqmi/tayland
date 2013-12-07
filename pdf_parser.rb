@@ -27,7 +27,7 @@ class PDF_Parser
 			property[:taxAddr] = elems[0].text
 			taxAddr = property[:taxAddr].split()[0..-3].join " "
 			propAddr = property[:propertyAddr].split()[0..-2].join " "
-			if taxAddr == propAddr
+			if taxAddr.downcase == propAddr.downcase
 				property[:owns] = 1 
 			else 
 				property[:owns] = 0

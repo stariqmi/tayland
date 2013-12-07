@@ -67,6 +67,7 @@ class County
 		arr << addray[-2]
 		arr << addray[-1]
 		arr << property[:owns]
+		arr << property[:owner]
 		arr
 	end
 
@@ -77,7 +78,12 @@ class County
 		i = 1
 		sheet.update_row 0, *@headers
 		@filteredProperties.each do |property|
-			property[:excel].slice! 0
+			
+			# Cleaning extra data
+			property[:excel].slice! 0 # Deletes the "owns" field from excel
+			property[:excel][0] = property[:pdf][-1]	# Transfers owner from pdf to excel
+			property[:pdf].slice! -1	# Deletes "owner" from pdfs
+			
 			row = property[:pdf].concat property[:excel]
 			@mainRows << row
 			sheet.update_row i, *row
